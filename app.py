@@ -80,5 +80,23 @@ def get_task(task_id:str=Path(...,description='ID of the task in DB',example='T0
 
 
     
-
+#Delete task
+@app.delete('/delete/{task_id}')
+def delete_data(task_id:str):
+    data=load_data()
+    
+    if task_id not in data:
+        raise HTTPException(status_code=404,detail='Task not found')
+    
+    if "id" in data[task_id]:
+        del data[task_id]['id']
+        save_data(data)
+        
+    del data[task_id]
+    save_data(data)
+    
+    return{
+        'message':'Task deleted Successfully',
+        'deleted_task':delete_data
+    }
 
